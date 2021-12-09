@@ -1,0 +1,41 @@
+ngb-pagination {
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+}
+
+.icon {
+  margin-left: 2px;
+  font-size: 20px;
+  color: white;
+}
+
+.dateOrderButton {
+  position: absolute;
+  top: 32px;
+  outline: none;
+  background-color: #212529;
+  border-color: #32383e;
+  border: 2px #32383e;
+}
+
+.nav-item-selector {
+  margin-top: 20px;
+  margin-left: 20px;
+}
+
+.nav-item-text {
+  margin-top: 25px;
+  margin-left: 20px;
+}
+
+.date-selector {
+  margin-top: 18px;
+  margin-left: 20px;
+}
+
+my-color-icon {
+  margin-left: 2px;
+  font-size: 20px;
+  color: #32383e;
+}

@@ -1,0 +1,45 @@
+.example-container {
+  background-color: rgb(65, 61, 61);
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.example-sidenav-container {
+  flex: 1;
+  min-height: 95vh !important;
+}
+
+mat-sidenav {
+  width: 15%;
+}
+
+.menubutton {
+  margin-left: 5px;
+}
+
+.icono {
+  margin-right: 10px;
+}
+
+.appName {
+  font-size: 150%;
+  margin-left: 20px;
+  color: white;
+  text-shadow: 0.25px 0.25px;
+  font-size: 25px;
+  text-decoration: none;
+}
+
+.users {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 100%;
+  color: white;
+  font-size: 20px;
+  text-decoration: none;
+}

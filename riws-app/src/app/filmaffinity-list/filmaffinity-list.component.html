@@ -1,0 +1,232 @@
+<!-- Filters -->
+<div class="card my-5">
+  <ul class="nav">
+    <!-- by title -->
+    <li class="nav-item-text">
+      <mat-label>Title</mat-label>
+      <div class="form-group">
+        <input
+          type="text"
+          class="form-control"
+          (change)="filterTitle()"
+          id="titleFilter"
+          placeholder="Find by title..."
+        />
+      </div>
+    </li>
+
+    <!-- by start year -->
+    <li class="nav-item-text">
+      <mat-label>Start year</mat-label>
+      <div class="form-group">
+        <input
+          type="number"
+          class="form-control"
+          (change)="filterYearStart()"
+          id="yearStartFilter"
+          placeholder="From year..."
+        />
+      </div>
+    </li>
+
+    <!-- by end year -->
+    <li class="nav-item-text">
+      <mat-label>End year</mat-label>
+      <div class="form-group">
+        <input
+          type="number"
+          class="form-control"
+          (change)="filterYearEnd()"
+          id="yearEndFilter"
+          placeholder="To year..."
+        />
+      </div>
+    </li>
+  </ul>
+
+  <ul class="nav">
+    <!-- by min avg rate -->
+    <li class="nav-item-text">
+      <mat-label>Average rate</mat-label>
+      <div class="form-group">
+        <input
+          type="number"
+          class="form-control"
+          (change)="filterMinAvgRate()"
+          id="minAvgRateFilter"
+          placeholder="Min. average rate..."
+        />
+      </div>
+    </li>
+
+    <!-- by min rates -->
+    <li class="nav-item-text">
+      <mat-label>Rates</mat-label>
+      <div class="form-group">
+        <input
+          type="number"
+          class="form-control"
+          (change)="filterMinRates()"
+          id="minRatesFilter"
+          placeholder="Min. rates..."
+        />
+      </div>
+    </li>
+
+    <!-- by directors -->
+    <li class="nav-item-text">
+      <mat-label>Directors</mat-label>
+      <div *ngFor="let director of directors; let i = index" class="form-group">
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control"
+            (change)="filterDirectors()"
+            placeholder="Director name..."
+            id="directorFilter{{ i }}"
+            aria-label="Recipient's username with two button addons"
+            aria-describedby="button-addon4"
+          />
+          <div *ngIf="i == 0" class="input-group-append" id="button-addon4">
+            <span *ngIf="this.directors.length < 3" class="input-group-btn">
+              <button
+                class="btn btn-default"
+                type="button"
+                (click)="addDirector()"
+              >
+                <mat-icon class="my-color-icon">plus_one</mat-icon>
+              </button>
+            </span>
+            <span *ngIf="this.directors.length > 1" class="input-group-btn">
+              <button
+                class="btn btn-default"
+                type="button"
+                (click)="removeDirector(i)"
+              >
+                <mat-icon class="my-color-icon">exposure_minus_1</mat-icon>
+              </button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </li>
+
+    <!-- by cast -->
+    <li class="nav-item-text">
+      <mat-label>Cast</mat-label>
+      <div *ngFor="let actor of cast; let i = index" class="form-group">
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control"
+            (change)="filterCast()"
+            placeholder="Actor name..."
+            id="actorFilter{{ i }}"
+            aria-label="Recipient's username with two button addons"
+            aria-describedby="button-addon4"
+          />
+          <div *ngIf="i == 0" class="input-group-append" id="button-addon4">
+            <span *ngIf="this.cast.length < 5" class="input-group-btn">
+              <button
+                class="btn btn-default"
+                type="submit"
+                (click)="addActor()"
+              >
+                <mat-icon class="my-color-icon">plus_one</mat-icon>
+              </button>
+            </span>
+            <span *ngIf="this.cast.length > 1" class="input-group-btn">
+              <button
+                class="btn btn-default"
+                type="submit"
+                (click)="removeActor(i)"
+              >
+                <mat-icon class="my-color-icon">exposure_minus_1</mat-icon>
+              </button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<!-- Items table -->
+<div class="card my-5">
+  <div class="card-body">
+    <table class="table table-bordered table-striped">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">
+            Position
+            <button class="dateOrderButton" (click)="positionOrder()">
+              <mat-icon class="icon">swap_vert</mat-icon>
+            </button>
+          </th>
+          <th scope="col">
+            Title
+            <button class="dateOrderButton" (click)="titleOrder()">
+              <mat-icon class="icon">swap_vert</mat-icon>
+            </button>
+          </th>
+          <th scope="col">
+            Year
+            <button class="dateOrderButton" (click)="yearOrder()">
+              <mat-icon class="icon">swap_vert</mat-icon>
+            </button>
+          </th>
+          <th scope="col">
+            Avg. rating
+            <button class="dateOrderButton" (click)="avgOrder()">
+              <mat-icon class="icon">swap_vert</mat-icon>
+            </button>
+          </th>
+          <th scope="col">
+            Rates
+            <button class="dateOrderButton" (click)="ratesOrder()">
+              <mat-icon class="icon">swap_vert</mat-icon>
+            </button>
+          </th>
+          <th scope="col">Director/s</th>
+          <th scope="col">Cast</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of items">
+          <td style="width: 12%">{{ item.position }}</td>
+          <td style="width: 38%">{{ item.title }}</td>
+          <td style="width: 10%">{{ item.year }}</td>
+          <td style="width: 15%">{{ item.avg_rating | number }}</td>
+          <td style="width: 10%">{{ item.rate_count | number }}</td>
+          <td style="width: 10%">
+            <span
+              *ngFor="let director of item.director"
+              class="badge badge-secondary"
+              >{{ director }}<br
+            /></span>
+          </td>
+          <td style="width: 10%">
+            <span *ngFor="let actor of item.cast" class="badge badge-secondary"
+              >{{ actor }}<br
+            /></span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <select (change)="itemsPerPage($event)">
+      <option selected="selected">16</option>
+      <option>32</option>
+      <option>64</option>
+    </select>
+    <ngb-pagination
+      [collectionSize]="totalItems"
+      [(page)]="start"
+      [pageSize]="numRows"
+      [rotate]="true"
+      [ellipses]="false"
+      [boundaryLinks]="true"
+      (pageChange)="loadPage($event)"
+    >
+    </ngb-pagination>
+  </div>
+</div>
