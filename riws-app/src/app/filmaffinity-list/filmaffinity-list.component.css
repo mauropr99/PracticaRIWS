@@ -48,5 +48,9 @@ my-color-icon {
 }
 
 .input-full-width {
-  width: 400px !important;
+  width: 600px !important;
+}
+
+.input-cast-director-width {
+  width: 300px !important;
 }

@@ -8,6 +8,7 @@ export class FilterQuery {
     minAvgRating: number;
     minRateCount: number;
     poster: string;
+    varint: number;
 
     queryEmpezada: boolean = false;
     existeBusquedaRango: boolean = false;
@@ -45,6 +46,7 @@ export class FilterQuery {
         this.minRateCountField = 'rate_count';
 
         this.finalString = '';
+        this.varint = 0;
 
     }
 
@@ -55,15 +57,15 @@ export class FilterQuery {
         this.primerCast = true;
         this.primerWordTitle = true;
 
-        if (this.title != undefined && this.title != '') {
+        if (this.title != '') {
             this.title.split(' ').forEach(word => {
                 if (!this.primerWordTitle) {
                     this.finalString += ' AND '
                 } else {
                     this.primerWordTitle = false
                 }
-                this.finalString += this.titleField + this.title;
-
+                this.finalString += this.titleField + word.replace('.', '').replace(',', '').replace(':', '') + '*';
+                console.log(this.finalString)
             })
             this.queryEmpezada = true;
         }
@@ -85,56 +87,42 @@ export class FilterQuery {
             this.finalString += '{!frange l=' + this.yearStart + ' u=' + this.yearEnd + '}' + this.yearField;
         }
 
-        if (this.directors.length != 0 && this.directors[0] != '') {
-            console.log(this.directors)
-            this.comprobarQuery()
-            if (this.directors.length > 1) {
-                this.finalString += '( '
-            }
+        if (this.directors.length != 0) {
 
             this.directors.forEach(director => {
-                console.log(director.split(' '))
+                (director.split(' '))
                 director.split(' ').forEach(director_word => {
-                    if (!this.primerDirector) {
-                        this.finalString += ' AND '
-                    } else {
-                        this.primerDirector = false
-                    }
                     if (director_word != '') {
-                        this.finalString += this.directorsField + director_word;
+                        if (!this.primerDirector) {
+                            this.finalString += ' AND '
+                        } else {
+                            this.comprobarQuery()
+                            this.primerDirector = false
+                        }
+
+                        this.finalString += this.directorsField + director_word + '*';
                     }
                 })
-
             })
-
-            if (this.directors.length > 1) {
-                this.finalString += ' )'
-            }
         }
 
         if (this.cast.length != 0) {
-            this.comprobarQuery()
-            if (this.cast.length > 1) {
-                this.finalString += '( '
-            }
 
             this.cast.forEach(cast => {
                 cast.split(' ').forEach(cast_word => {
-                    if (!this.primerCast) {
-                        this.finalString += ' AND '
-                    } else {
-                        this.primerCast = false
-                    }
                     if (cast_word != '') {
-                        this.finalString += this.castField + cast_word;
+                        if (!this.primerCast) {
+                            this.finalString += ' AND '
+                        } else {
+                            this.comprobarQuery()
+                            this.primerCast = false
+                        }
+
+                        this.finalString += this.castField + cast_word + '*';
                     }
                 })
 
             })
-
-            if (this.cast.length > 1) {
-                this.finalString += ' )'
-            }
         }
 
         if (!isNaN(this.minAvgRating)) {

@@ -20,7 +20,6 @@ export class FilmaffinityService {
     }
 
     public getItems(query: string, filterQuery: FilterQuery, sort: string, start: number, numRows: number): Observable<Page> {
-        console.log(filterQuery.crearQuery());
 
         if (filterQuery != undefined) {
             this.query = filterQuery.crearQuery()

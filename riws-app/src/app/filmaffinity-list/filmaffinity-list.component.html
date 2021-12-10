@@ -96,75 +96,75 @@
   <ul class="nav">
     <!-- by directors -->
     <li class="nav-item-text">
-      <div *ngFor="let director of directors; let i = index" class="form-group">
-        <div class="input-group">
+      <div *ngFor="let director of directors; let i = index">
+        <mat-form-field class="input-cast-director-width" appearance="fill">
+          <mat-label>Director name...</mat-label>
           <input
+            matInput
             type="text"
-            class="form-control"
-            (change)="filterDirectors()"
-            placeholder="Director name..."
+            name="director{{ i }}"
+            [(ngModel)]="filterQuery.directors[i]"
             id="directorFilter{{ i }}"
-            aria-label="Recipient's username with two button addons"
-            aria-describedby="button-addon4"
+            (ngModelChange)="filterDirectors()"
           />
-          <div *ngIf="i == 0" class="input-group-append" id="button-addon4">
-            <span *ngIf="this.directors.length < 3" class="input-group-btn">
-              <button
-                class="btn btn-default"
-                type="button"
-                (click)="addDirector()"
-              >
-                <mat-icon class="my-color-icon">plus_one</mat-icon>
-              </button>
-            </span>
-            <span *ngIf="this.directors.length > 1" class="input-group-btn">
-              <button
-                class="btn btn-default"
-                type="button"
-                (click)="removeDirector(i)"
-              >
-                <mat-icon class="my-color-icon">exposure_minus_1</mat-icon>
-              </button>
-            </span>
-          </div>
-        </div>
+        </mat-form-field>
+        <mat-button
+          class="btn btn-default close-button"
+          *ngIf="this.directors.length < 3 && i == 0"
+          matSuffix
+          mat-icon-button
+          aria-label="Plus one"
+          (click)="addDirector()"
+        >
+          <mat-icon class="my-color-icon">plus_one</mat-icon>
+        </mat-button>
+        <mat-button
+          class="btn btn-default close-button"
+          *ngIf="this.directors.length > 1 && i == 0"
+          matSuffix
+          mat-icon-button
+          aria-label="Minus one"
+          (click)="removeDirector(i)"
+        >
+          <mat-icon class="my-color-icon">exposure_minus_1</mat-icon>
+        </mat-button>
       </div>
     </li>
 
     <!-- by cast -->
     <li class="nav-item-text">
-      <div *ngFor="let actor of cast; let i = index" class="form-group">
-        <div class="input-group">
+      <div *ngFor="let actor of cast; let i = index">
+        <mat-form-field class="input-cast-director-width" appearance="fill">
+          <mat-label>Actor name...</mat-label>
           <input
+            matInput
             type="text"
-            class="form-control"
-            (change)="filterCast()"
-            placeholder="Actor name..."
+            name="actor{{ i }}"
+            [(ngModel)]="filterQuery.cast[i]"
             id="actorFilter{{ i }}"
-            aria-label="Recipient's username with two button addons"
-            aria-describedby="button-addon4"
+            (ngModelChange)="filterCast()"
           />
-          <div *ngIf="i == 0" class="input-group-append" id="button-addon4">
-            <span *ngIf="this.cast.length < 5" class="input-group-btn">
-              <button
-                class="btn btn-default"
-                type="submit"
-                (click)="addActor()"
-              >
-                <mat-icon class="my-color-icon">plus_one</mat-icon>
-              </button>
-            </span>
-            <span *ngIf="this.cast.length > 1" class="input-group-btn">
-              <button
-                class="btn btn-default"
-                type="submit"
-                (click)="removeActor(i)"
-              >
-                <mat-icon class="my-color-icon">exposure_minus_1</mat-icon>
-              </button>
-            </span>
-          </div>
-        </div>
+        </mat-form-field>
+        <mat-button
+          class="btn btn-default close-button"
+          *ngIf="this.cast.length < 5 && i == 0"
+          matSuffix
+          mat-icon-button
+          aria-label="Plus one"
+          (click)="addActor()"
+        >
+          <mat-icon class="my-color-icon">plus_one</mat-icon>
+        </mat-button>
+        <mat-button
+          class="btn btn-default close-button"
+          *ngIf="this.cast.length > 1 && i == 0"
+          matSuffix
+          mat-icon-button
+          aria-label="Minus one"
+          (click)="removeActor(i)"
+        >
+          <mat-icon class="my-color-icon">exposure_minus_1</mat-icon>
+        </mat-button>
       </div>
     </li>
   </ul>

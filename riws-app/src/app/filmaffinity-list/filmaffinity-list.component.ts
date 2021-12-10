@@ -52,17 +52,11 @@ export class FilmaffinityListComponent implements OnInit {
             this.url = url[0].path;
         })
 
-        /* this.filteredOptions = this.myControl.valueChanges.pipe(
-                    startWith(''),
-                    map(value => this._filter(value)),
-                ); */
-
         this.loadPage();
-        console.log(this.options);
     }
 
 
-    findItems(query: string, filterQuery: FilterQuery, sort: string, start: number, numRows: number): void {
+    private findItems(query: string, filterQuery: FilterQuery, sort: string, start: number, numRows: number): void {
         this.filmaffinityService.getItems(query, filterQuery, sort, start, numRows).subscribe(result => {
             this.items = result.response.docs;
             this.totalItems = result.response.numFound;
@@ -126,12 +120,6 @@ export class FilmaffinityListComponent implements OnInit {
         this.findItems(this.query, this.filterQuery, this.sort, this.start, this.numRows);
     }
 
-    /* Private methods */
-    private _filter(value: string): string[] {
-        const filterValue = value.toLowerCase();
-        return this.options.filter(option => option.toLowerCase().includes(filterValue));
-    }
-
     filterYearStart() {
         this.filterQuery.yearStart = (<HTMLInputElement>document.getElementById("yearStartFilter")).valueAsNumber
         this.findItems(this.query, this.filterQuery, this.sort, this.start, this.numRows);
@@ -155,15 +143,15 @@ export class FilmaffinityListComponent implements OnInit {
     filterDirectors() {
         for (let i = 0; i < this.directors.length; i++) {
             this.filterQuery.directors[i] = (<HTMLInputElement>document.getElementById("directorFilter" + i)).value
-            this.findItems(this.query, this.filterQuery, this.sort, this.start, this.numRows);
         }
+        this.findItems(this.query, this.filterQuery, this.sort, this.start, this.numRows);
     }
 
     filterCast() {
         for (let i = 0; i < this.cast.length; i++) {
             this.filterQuery.cast[i] = (<HTMLInputElement>document.getElementById("actorFilter" + i)).value
-            this.findItems(this.query, this.filterQuery, this.sort, this.start, this.numRows);
         }
+        this.findItems(this.query, this.filterQuery, this.sort, this.start, this.numRows);
     }
 
     /* Other methods */
