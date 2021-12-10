@@ -10,9 +10,12 @@ ngb-pagination {
   color: white;
 }
 
+.nav {
+  justify-content: center;
+}
+
 .dateOrderButton {
   position: absolute;
-  top: 32px;
   outline: none;
   background-color: #212529;
   border-color: #32383e;
@@ -22,6 +25,10 @@ ngb-pagination {
 .nav-item-selector {
   margin-top: 20px;
   margin-left: 20px;
+}
+
+.close-button {
+  margin-bottom: 8px;
 }
 
 .nav-item-text {
@@ -38,4 +45,8 @@ my-color-icon {
   margin-left: 2px;
   font-size: 20px;
   color: #32383e;
+}
+
+.input-full-width {
+  width: 400px !important;
 }

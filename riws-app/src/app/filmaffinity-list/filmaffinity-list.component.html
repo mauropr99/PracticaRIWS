@@ -1,81 +1,101 @@
 <!-- Filters -->
-<div class="card my-5">
+<div class="card my-8">
   <ul class="nav">
-    <!-- by title -->
+    <!-- by title  -->
     <li class="nav-item-text">
-      <mat-label>Title</mat-label>
-      <div class="form-group">
-        <input
-          type="text"
-          class="form-control"
-          (change)="filterTitle()"
-          id="titleFilter"
-          placeholder="Find by title..."
-        />
-      </div>
-    </li>
-
-    <!-- by start year -->
-    <li class="nav-item-text">
-      <mat-label>Start year</mat-label>
-      <div class="form-group">
-        <input
-          type="number"
-          class="form-control"
-          (change)="filterYearStart()"
-          id="yearStartFilter"
-          placeholder="From year..."
-        />
-      </div>
-    </li>
-
-    <!-- by end year -->
-    <li class="nav-item-text">
-      <mat-label>End year</mat-label>
-      <div class="form-group">
-        <input
-          type="number"
-          class="form-control"
-          (change)="filterYearEnd()"
-          id="yearEndFilter"
-          placeholder="To year..."
-        />
-      </div>
+      <form class="example-form">
+        <mat-form-field class="input-full-width" appearance="fill">
+          <mat-label>Title</mat-label>
+          <input
+            matInput
+            type="text"
+            [(ngModel)]="filterQuery.title"
+            name="title"
+            id="titleFilter"
+            (ngModelChange)="filterTitle()"
+            [matAutocomplete]="auto"
+          />
+          <mat-button
+            class="btn btn-default close-button"
+            *ngIf="filterQuery.title"
+            matSuffix
+            mat-icon-button
+            aria-label="Clear"
+            (click)="clearTitle()"
+          >
+            <mat-icon class="my-color-icon">close</mat-icon>
+          </mat-button>
+          <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+            <mat-option *ngFor="let option of options" [value]="option">
+              {{ option }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </form>
     </li>
   </ul>
 
   <ul class="nav">
+    <!-- by start year -->
+    <li class="nav-item-text">
+      <mat-form-field appearance="fill">
+        <mat-label>From year...</mat-label>
+        <input
+          matInput
+          type="number"
+          [(ngModel)]="filterQuery.yearStart"
+          id="yearStartFilter"
+          (ngModelChange)="filterYearStart()"
+        />
+      </mat-form-field>
+    </li>
+
+    <!-- by end year -->
+    <li class="nav-item-text">
+      <mat-form-field appearance="fill">
+        <mat-label>To year...</mat-label>
+        <input
+          matInput
+          type="number"
+          [(ngModel)]="filterQuery.yearEnd"
+          id="yearEndFilter"
+          (ngModelChange)="filterYearEnd()"
+        />
+      </mat-form-field>
+    </li>
+
     <!-- by min avg rate -->
     <li class="nav-item-text">
-      <mat-label>Average rate</mat-label>
-      <div class="form-group">
+      <mat-form-field appearance="fill">
+        <mat-label>Min. average rate...</mat-label>
         <input
+          matInput
           type="number"
-          class="form-control"
-          (change)="filterMinAvgRate()"
+          [(ngModel)]="filterQuery.minAvgRating"
           id="minAvgRateFilter"
-          placeholder="Min. average rate..."
+          (ngModelChange)="filterMinAvgRate()"
         />
-      </div>
+      </mat-form-field>
     </li>
 
     <!-- by min rates -->
     <li class="nav-item-text">
-      <mat-label>Rates</mat-label>
-      <div class="form-group">
+      <mat-form-field appearance="fill">
+        <mat-label>Min. rates...</mat-label>
         <input
+          matInput
           type="number"
-          class="form-control"
-          (change)="filterMinRates()"
+          [(ngModel)]="filterQuery.minRateCount"
           id="minRatesFilter"
-          placeholder="Min. rates..."
+          (ngModelChange)="filterMinRates()"
         />
-      </div>
+      </mat-form-field>
     </li>
+  </ul>
 
+  <ul class="nav">
     <!-- by directors -->
     <li class="nav-item-text">
-      <mat-label>Directors</mat-label>
       <div *ngFor="let director of directors; let i = index" class="form-group">
         <div class="input-group">
           <input
@@ -113,7 +133,6 @@
 
     <!-- by cast -->
     <li class="nav-item-text">
-      <mat-label>Cast</mat-label>
       <div *ngFor="let actor of cast; let i = index" class="form-group">
         <div class="input-group">
           <input
@@ -154,21 +173,26 @@
 <!-- Items table -->
 <div class="card my-5">
   <div class="card-body">
+    <mat-paginator
+      #paginator
+      [pageIndex]="pageIndex"
+      [length]="totalItems"
+      [pageSize]="numRows"
+      [pageSizeOptions]="[20, 50, 100]"
+      aria-label="Go to page..."
+      (page)="loadPage($event)"
+    >
+    </mat-paginator>
     <table class="table table-bordered table-striped">
       <thead class="thead-dark">
         <tr>
-          <th scope="col">
+          <th mat-sort-header="position" scope="col">
             Position
             <button class="dateOrderButton" (click)="positionOrder()">
               <mat-icon class="icon">swap_vert</mat-icon>
             </button>
           </th>
-          <th scope="col">
-            Title
-            <button class="dateOrderButton" (click)="titleOrder()">
-              <mat-icon class="icon">swap_vert</mat-icon>
-            </button>
-          </th>
+          <th scope="col">Title</th>
           <th scope="col">
             Year
             <button class="dateOrderButton" (click)="yearOrder()">
@@ -213,20 +237,5 @@
         </tr>
       </tbody>
     </table>
-    <select (change)="itemsPerPage($event)">
-      <option selected="selected">16</option>
-      <option>32</option>
-      <option>64</option>
-    </select>
-    <ngb-pagination
-      [collectionSize]="totalItems"
-      [(page)]="start"
-      [pageSize]="numRows"
-      [rotate]="true"
-      [ellipses]="false"
-      [boundaryLinks]="true"
-      (pageChange)="loadPage($event)"
-    >
-    </ngb-pagination>
   </div>
 </div>

@@ -6,20 +6,23 @@ import { FilmaffinityService } from '../service/filmaffinity-service.service';
 import { Filter } from '../model/filter';
 import { ActivatedRoute } from '@angular/router';
 import { FilterQuery } from '../model/filterQuery';
+import { PageEvent } from '@angular/material/paginator';
+import { map, Observable, startWith } from 'rxjs';
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
     selector: 'app-filmaffinity-list',
     templateUrl: './filmaffinity-list.component.html',
     styleUrls: ['./filmaffinity-list.component.css'],
-    providers: [NgbPaginationConfig, FilmaffinityService, FilterQuery]
+    providers: [FilmaffinityService, FilterQuery]
 })
 export class FilmaffinityListComponent implements OnInit {
 
+    pageEvent: PageEvent;
     items: FilmaffinityItem[];
     totalItems: number;
+    pageIndex: number = 0;
 
-    previousPage: number;
-    showPagination: boolean = true;
     start: number;
     numRows: number;
     directors: string[] = [''];
@@ -30,49 +33,59 @@ export class FilmaffinityListComponent implements OnInit {
     filterQuery: FilterQuery;
     ranking: string;
 
-    minDate = new Date("2010-01-01");
-    maxDate = new Date("2030-01-01");
+    myControl = new FormControl();
+    options: string[] = [];
+    url: string;
 
     constructor(
         private filmaffinityService: FilmaffinityService,
-        private config: NgbPaginationConfig,
         private route: ActivatedRoute) {
-        config.size = 'sm';
-        config.boundaryLinks = true;
-        config.maxSize = 5;
-        config.pageSize = 16;
-        config.rotate = true;
     }
 
     ngOnInit() {
         this.filterQuery = new FilterQuery();
+        this.pageIndex = 0;
         this.start = 0;
-        this.numRows = 16;
-        this.previousPage = 1;
+        this.numRows = 20;
         this.route.url.subscribe(url => {
             url[0].path === 'series' ? this.query += "serie" : this.query += "movie";
+            this.url = url[0].path;
         })
-        this.findItems(this.query, this.filterQuery, this.sort, this.start, this.numRows);
+
+        /* this.filteredOptions = this.myControl.valueChanges.pipe(
+                    startWith(''),
+                    map(value => this._filter(value)),
+                ); */
+
+        this.loadPage();
+        console.log(this.options);
     }
 
 
     findItems(query: string, filterQuery: FilterQuery, sort: string, start: number, numRows: number): void {
         this.filmaffinityService.getItems(query, filterQuery, sort, start, numRows).subscribe(result => {
             this.items = result.response.docs;
+            this.totalItems = result.response.numFound;
         });
     }
 
-    findAccessesFilter(query: string, filterQuery: FilterQuery, sort: string, start: number, numRows: number): void {
-        this.filmaffinityService.getItems(query, filterQuery, sort, start, numRows).subscribe(result => {
-            this.items = result.response.docs;
-        });
-    }
-
-    loadPage(page: number) {
-        if (page !== this.previousPage) {
-            this.previousPage = page;
-            this.findItems(this.query, this.filterQuery, this.sort, this.start, this.numRows);
+    public loadPage(event?: PageEvent) {
+        if (event) {
+            if (event.pageSize != this.numRows) {
+                this.numRows = event.pageSize;
+                this.start = event.pageIndex * this.numRows;
+            } else {
+                this.pageIndex = event.pageIndex;
+                this.start = event.pageIndex * event.pageSize;
+            }
         }
+        this.filmaffinityService.getItems(this.query, this.filterQuery, this.sort, this.start, this.numRows).subscribe(
+            response => {
+                this.items = response.response.docs;
+                this.totalItems = response.response.numFound;
+            }
+        );
+        return event;
     }
 
     itemsPerPage(event: any) {
@@ -84,7 +97,39 @@ export class FilmaffinityListComponent implements OnInit {
     /* Filters */
     filterTitle() {
         this.filterQuery.title = (<HTMLInputElement>document.getElementById("titleFilter")).value
+        if (this.filterQuery.title != "") {
+            this.options = [];
+            this.filmaffinityService.getTitleSuggestions(this.filterQuery.title).subscribe(
+                response => {
+                    let json = Object.entries(response.suggest.filmaffinitySuggester)[0];
+                    let entries = json[1] as JSON;
+                    entries["suggestions"].map(suggestion => {
+                        if (this.url.includes("serie")) {
+                            if (suggestion.term.includes('TV')) {
+                                this.options.push(suggestion.term);
+                            }
+                        } else {
+                            if (!suggestion.term.includes('TV')) {
+                                this.options.push(suggestion.term);
+                            }
+                        }
+                    }
+                    );
+                }
+            );
+        }
         this.findItems(this.query, this.filterQuery, this.sort, this.start, this.numRows);
+    }
+
+    clearTitle() {
+        this.filterQuery.title = "";
+        this.findItems(this.query, this.filterQuery, this.sort, this.start, this.numRows);
+    }
+
+    /* Private methods */
+    private _filter(value: string): string[] {
+        const filterValue = value.toLowerCase();
+        return this.options.filter(option => option.toLowerCase().includes(filterValue));
     }
 
     filterYearStart() {
@@ -152,15 +197,6 @@ export class FilmaffinityListComponent implements OnInit {
             this.sort = 'position desc';
         } else {
             this.sort = 'position asc';
-        }
-        this.findItems(this.query, this.filterQuery, this.sort, this.start, this.numRows);
-    }
-
-    titleOrder() {
-        if (this.sort == 'title asc') {
-            this.sort = 'title desc';
-        } else {
-            this.sort = 'title asc';
         }
         this.findItems(this.query, this.filterQuery, this.sort, this.start, this.numRows);
     }

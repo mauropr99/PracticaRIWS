@@ -16,6 +16,8 @@ import { AppComponent } from './app.component';
 import { FilmaffinityListComponent } from './filmaffinity-list/filmaffinity-list.component';
 import { FilmaffinityService } from './service/filmaffinity-service.service';
 import { SidenavComponent } from './sidenav/sidenav.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
     declarations: [
@@ -38,6 +40,8 @@ import { SidenavComponent } from './sidenav/sidenav.component';
         MatToolbarModule,
         FormsModule,
         ReactiveFormsModule,
+        MatPaginatorModule,
+        MatAutocompleteModule
     ],
     providers: [FilmaffinityService],
     bootstrap: [AppComponent]

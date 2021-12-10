@@ -13,6 +13,7 @@ export class FilterQuery {
     existeBusquedaRango: boolean = false;
     primerDirector: boolean = false;
     primerCast: boolean = false;
+    primerWordTitle: boolean = false;
 
     titleField: string;
     positionField: string;
@@ -52,9 +53,18 @@ export class FilterQuery {
         this.queryEmpezada = false;
         this.primerDirector = true;
         this.primerCast = true;
+        this.primerWordTitle = true;
 
         if (this.title != undefined && this.title != '') {
-            this.finalString += this.titleField + '*' + this.title + '*';
+            this.title.split(' ').forEach(word => {
+                if (!this.primerWordTitle) {
+                    this.finalString += ' AND '
+                } else {
+                    this.primerWordTitle = false
+                }
+                this.finalString += this.titleField + this.title;
+
+            })
             this.queryEmpezada = true;
         }
 
@@ -83,12 +93,18 @@ export class FilterQuery {
             }
 
             this.directors.forEach(director => {
-                if (!this.primerDirector) {
-                    this.finalString += ' AND '
-                } else {
-                    this.primerDirector = false
-                }
-                this.finalString += this.directorsField + '*' + director.replace(' ', '\\ ') + '*';
+                console.log(director.split(' '))
+                director.split(' ').forEach(director_word => {
+                    if (!this.primerDirector) {
+                        this.finalString += ' AND '
+                    } else {
+                        this.primerDirector = false
+                    }
+                    if (director_word != '') {
+                        this.finalString += this.directorsField + director_word;
+                    }
+                })
+
             })
 
             if (this.directors.length > 1) {
@@ -103,12 +119,17 @@ export class FilterQuery {
             }
 
             this.cast.forEach(cast => {
-                if (!this.primerCast) {
-                    this.finalString += ' AND '
-                } else {
-                    this.primerCast = false
-                }
-                this.finalString += this.castField + '*' + cast.replace(' ', '\\ ') + '*';
+                cast.split(' ').forEach(cast_word => {
+                    if (!this.primerCast) {
+                        this.finalString += ' AND '
+                    } else {
+                        this.primerCast = false
+                    }
+                    if (cast_word != '') {
+                        this.finalString += this.castField + cast_word;
+                    }
+                })
+
             })
 
             if (this.cast.length > 1) {
@@ -119,18 +140,18 @@ export class FilterQuery {
         if (!isNaN(this.minAvgRating)) {
             this.comprobarQuery()
             this.finalString += '{!frange l=' + this.minAvgRating + '}' + this.minAvgRatingField;
-        } else {
+        } /* else {
             this.minAvgRating = 0;
             this.finalString += '{!frange l=' + this.minAvgRating + '}' + this.minAvgRatingField;
-        }
+        } */
 
         if (!isNaN(this.minRateCount)) {
             this.comprobarQuery()
             this.finalString += '{!frange l=' + this.minRateCount + '}' + this.minRateCountField;
-        } else {
+        }/*  else {
             this.minRateCount = 0;
             this.finalString += '{!frange l=' + this.minRateCount + '}' + this.minRateCountField;
-        }
+        } */
 
         this.finalString = 'ranking:* AND ' + this.finalString;
 

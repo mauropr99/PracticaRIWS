@@ -12,11 +12,11 @@ export class SidenavComponent implements OnInit {
 
     fillerNav = [
         { name: "Movies", route: "movies", icon: "movie" },
-        { name: "Series", route: "series", icon: "tv" }
+        { name: "Series", route: "series", icon: "tv" },
     ]
 
     constructor(media: MediaMatcher) {
-        this.mobileQuery = media.matchMedia('(max-width: 600px)');
+        this.mobileQuery = media.matchMedia('(max-width: 400px)');
     }
 
     shouldRun = true;
