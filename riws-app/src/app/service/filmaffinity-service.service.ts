@@ -15,8 +15,8 @@ export class FilmaffinityService {
     query: string;
 
     constructor(private http: HttpClient) {
-        this.solrUrl = 'http://localhost:8983/solr/riws-filmaffinity/select';
-        this.solrSuggestUrl = 'http://localhost:8983/solr/riws-filmaffinity/suggest';
+        this.solrUrl = 'http://52.90.194.179:8983/solr/riws-filmaffinity/select';
+        this.solrSuggestUrl = 'http://52.90.194.179:8983/solr/riws-filmaffinity/suggest';
     }
 
     public getItems(query: string, filterQuery: FilterQuery, sort: string, start: number, numRows: number): Observable<Page> {
