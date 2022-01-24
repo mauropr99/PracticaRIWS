@@ -15,8 +15,8 @@ export class FilmaffinityService {
     query: string;
 
     constructor(private http: HttpClient) {
-        this.solrUrl = 'http://54.89.215.139:8983/solr/riws-filmaffinity/select';
-        this.solrSuggestUrl = 'http://54.89.215.139:8983/solr/riws-filmaffinity/suggest';
+        this.solrUrl = 'https://cors-everywhere.herokuapp.com/http://ec2-54-89-215-139.compute-1.amazonaws.com:8983/solr/riws-filmaffinity/select';
+        this.solrSuggestUrl = 'https://cors-everywhere.herokuapp.com/http://ec2-54-89-215-139.compute-1.amazonaws.com:8983/solr/riws-filmaffinity/suggest';
     }
 
     public getItems(query: string, filterQuery: FilterQuery, sort: string, start: number, numRows: number): Observable<Page> {
